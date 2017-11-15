@@ -137,9 +137,11 @@
 		F3A05FA11FB89F0E00FCBE7B /* PhoneBook */ = {
 			isa = PBXGroup;
 			children = (
+				F3E8FAB81FBCCB8D00A98903 /* Modal */,
+				F3E8FAB91FBCCBBF00A98903 /* Views */,
+				F3E8FABA1FBCCBC900A98903 /* Controllers */,
 				F3A05FA21FB89F0E00FCBE7B /* AppDelegate.swift */,
 				F3A05FA41FB89F0E00FCBE7B /* ViewController.swift */,
-				F3A05FA61FB89F0E00FCBE7B /* Main.storyboard */,
 				F3A05FA91FB89F0F00FCBE7B /* Assets.xcassets */,
 				F3A05FAB1FB89F0F00FCBE7B /* LaunchScreen.storyboard */,
 				F3A05FAE1FB89F0F00FCBE7B /* Info.plist */,
@@ -163,6 +165,28 @@
 				F3A05FC41FB89F0F00FCBE7B /* Info.plist */,
 			);
 			path = PhoneBookUITests;
+			sourceTree = "<group>";
+		};
+		F3E8FAB81FBCCB8D00A98903 /* Modal */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Modal;
+			sourceTree = "<group>";
+		};
+		F3E8FAB91FBCCBBF00A98903 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		F3E8FABA1FBCCBC900A98903 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				F3A05FA61FB89F0E00FCBE7B /* Main.storyboard */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
