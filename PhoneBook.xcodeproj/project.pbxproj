@@ -10,15 +10,16 @@
 		7D5EDA0706BC223005024B30 /* Pods_PhoneBookTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07FAF40C5C4FD88E4DFF9F29 /* Pods_PhoneBookTests.framework */; };
 		8E563D990FCC48092CDE7593 /* Pods_PhoneBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E4FE6C4D199B3084249A585 /* Pods_PhoneBook.framework */; };
 		90FAF3395E5176F5F0E494E8 /* Pods_PhoneBookUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BF5DD1F5A612DAFB8B36BDA /* Pods_PhoneBookUITests.framework */; };
-		F348F4841FBF238600336EF7 /* AllContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F348F4831FBF238600336EF7 /* AllContactsViewController.swift */; };
-		F348F4861FBF23E200336EF7 /* DataSourse.swift in Sources */ = {isa = PBXBuildFile; fileRef = F348F4851FBF23E200336EF7 /* DataSourse.swift */; };
+		F31A76E11FBF6F170062E276 /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31A76E01FBF6F170062E276 /* ContactsViewController.swift */; };
 		F348F4881FBF242700336EF7 /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = F348F4871FBF242700336EF7 /* Person.swift */; };
+		F34F7FC21FBF41EA00C71F96 /* PersonTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F34F7FC11FBF41EA00C71F96 /* PersonTableViewCell.swift */; };
 		F3A05FA31FB89F0E00FCBE7B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A05FA21FB89F0E00FCBE7B /* AppDelegate.swift */; };
 		F3A05FA81FB89F0E00FCBE7B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F3A05FA61FB89F0E00FCBE7B /* Main.storyboard */; };
 		F3A05FAA1FB89F0F00FCBE7B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F3A05FA91FB89F0F00FCBE7B /* Assets.xcassets */; };
 		F3A05FAD1FB89F0F00FCBE7B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F3A05FAB1FB89F0F00FCBE7B /* LaunchScreen.storyboard */; };
 		F3A05FB81FB89F0F00FCBE7B /* PhoneBookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A05FB71FB89F0F00FCBE7B /* PhoneBookTests.swift */; };
 		F3A05FC31FB89F0F00FCBE7B /* PhoneBookUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A05FC21FB89F0F00FCBE7B /* PhoneBookUITests.swift */; };
+		F3E7323F1FBF28E8008BE129 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E7323E1FBF28E8008BE129 /* DataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,9 +49,9 @@
 		7CA953AD04B20B868A53B2C1 /* Pods-PhoneBook.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhoneBook.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhoneBook/Pods-PhoneBook.release.xcconfig"; sourceTree = "<group>"; };
 		E1E94FAECA9F47171ADA5D93 /* Pods-PhoneBookTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhoneBookTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-PhoneBookTests/Pods-PhoneBookTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E96D95CDF96E5B958A3EFD6D /* Pods-PhoneBookTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PhoneBookTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-PhoneBookTests/Pods-PhoneBookTests.release.xcconfig"; sourceTree = "<group>"; };
-		F348F4831FBF238600336EF7 /* AllContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllContactsViewController.swift; sourceTree = "<group>"; };
-		F348F4851FBF23E200336EF7 /* DataSourse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourse.swift; sourceTree = "<group>"; };
+		F31A76E01FBF6F170062E276 /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
 		F348F4871FBF242700336EF7 /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
+		F34F7FC11FBF41EA00C71F96 /* PersonTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonTableViewCell.swift; sourceTree = "<group>"; };
 		F3A05F9F1FB89F0E00FCBE7B /* PhoneBook.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhoneBook.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3A05FA21FB89F0E00FCBE7B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F3A05FA71FB89F0E00FCBE7B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -63,6 +64,7 @@
 		F3A05FBE1FB89F0F00FCBE7B /* PhoneBookUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhoneBookUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3A05FC21FB89F0F00FCBE7B /* PhoneBookUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneBookUITests.swift; sourceTree = "<group>"; };
 		F3A05FC41FB89F0F00FCBE7B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F3E7323E1FBF28E8008BE129 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -181,7 +183,7 @@
 		F3E8FAB81FBCCB8D00A98903 /* Modal */ = {
 			isa = PBXGroup;
 			children = (
-				F348F4851FBF23E200336EF7 /* DataSourse.swift */,
+				F3E7323E1FBF28E8008BE129 /* DataManager.swift */,
 				F348F4871FBF242700336EF7 /* Person.swift */,
 			);
 			path = Modal;
@@ -190,6 +192,7 @@
 		F3E8FAB91FBCCBBF00A98903 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F34F7FC11FBF41EA00C71F96 /* PersonTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -198,7 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				F3A05FA61FB89F0E00FCBE7B /* Main.storyboard */,
-				F348F4831FBF238600336EF7 /* AllContactsViewController.swift */,
+				F31A76E01FBF6F170062E276 /* ContactsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -216,6 +219,7 @@
 				F3A05F9D1FB89F0E00FCBE7B /* Resources */,
 				9EC3A3FF10F357AD2D0E18CD /* [CP] Embed Pods Frameworks */,
 				EA83782178721A158BAAD5B2 /* [CP] Copy Pods Resources */,
+				F34F7FC01FBF377D00C71F96 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -486,6 +490,19 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-PhoneBook/Pods-PhoneBook-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		F34F7FC01FBF377D00C71F96 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/SwiftLint/swiftlint\"\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -494,9 +511,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				F3A05FA31FB89F0E00FCBE7B /* AppDelegate.swift in Sources */,
-				F348F4861FBF23E200336EF7 /* DataSourse.swift in Sources */,
+				F3E7323F1FBF28E8008BE129 /* DataManager.swift in Sources */,
 				F348F4881FBF242700336EF7 /* Person.swift in Sources */,
-				F348F4841FBF238600336EF7 /* AllContactsViewController.swift in Sources */,
+				F34F7FC21FBF41EA00C71F96 /* PersonTableViewCell.swift in Sources */,
+				F31A76E11FBF6F170062E276 /* ContactsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
