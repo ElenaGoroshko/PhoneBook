@@ -14,27 +14,26 @@ struct Person {
     private(set) var pfoneNumber: Int
     private(set) var pfoto: UIImage?
     private(set) var emai: String?
-    
 
     init(firstName: String, lastName: String, pfoneNumber: Int) {
         self.firstName = firstName
         self.lastName = lastName
         self.pfoneNumber = pfoneNumber
     }
-    private mutating func setFirstName(name: String){
+    private mutating func setFirstName(name: String) {
         self.firstName = name
     }
-    private mutating func setLastNAme(name: String){
+    private mutating func setLastNAme(name: String) {
         self.lastName = name
     }
-    private mutating func setPfoneNumber(pfoneNumber: Int){
+    private mutating func setPfoneNumber(pfoneNumber: Int) {
         self.pfoneNumber = pfoneNumber
     }
-    private mutating func setPfoto(pfoto:UIImage){
+    private mutating func setPfoto(pfoto: UIImage) {
         self.pfoto = pfoto
     }
-    private mutating func setEmail(emai: String){
+    private mutating func setEmail(emai: String) {
         self.emai = emai
     }
-        
+
 }

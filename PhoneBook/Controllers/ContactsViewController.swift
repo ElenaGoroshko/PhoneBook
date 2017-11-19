@@ -19,6 +19,18 @@ class ContactsViewController: UIViewController {
         tabelView.dataSource = self
         tabelView.delegate = self
     }
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        guard let destVC = segue.destination as? ContactOfPersonViewController,
+                segue.identifier == "detailsOfContact"
+            else {
+                fatalError("Error: It isn't detailsOfContact")
+            }
+        guard let cell = sender as? PersonTableViewCell,
+            let indexPath = tabelView.indexPath(for: cell)
+        else { return }
+        destVC.person = getPerson(indexPath: indexPath)
+    }
     // MARK: privat methods
     private func getPerson(indexPath: IndexPath) -> Person {
         let char = getCharacterOfAlphabet(section: indexPath.section)
@@ -52,7 +64,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return 70
     }
     func numberOfSections(in tableView: UITableView) -> Int {
         return DataManager.instance.charOfAlphabet.count
