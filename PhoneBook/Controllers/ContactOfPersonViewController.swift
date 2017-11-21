@@ -21,6 +21,9 @@ class ContactOfPersonViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        view.addGestureRecognizer(tapRecognizer)
+
         self.ibFirstName.delegate = self
         self.ibLastName.delegate = self
         self.ibPfone.delegate = self
@@ -94,47 +97,17 @@ extension ContactOfPersonViewController: UITextFieldDelegate {
         hideKeyboard()
         return true
     }
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        hideKeyboard()
-    }
+
 }
 
 // MARK: extention notification
 extension ContactOfPersonViewController {
     @objc private func keyboardWillShow(_ notification:Notification) {
+
     }
 
     @objc private func keyboardWillHide(_ notification:Notification) {
-        hideKeyboard()
+       // hideKeyboard()
     }
 }
-    /*
-     @objc private func keyboardWillShow(_ notification: Notification) {
-     guard let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
-     return
-     }
-     lcActionsBottomMargin.constant = keyboardFrame.size.height
-     UIView.animate(withDuration: 0.3) {
-     self.view.layoutIfNeeded()
-     }
-     }
-     
-     @objc private func keyboardWillHide(_ notification: Notification) {
-     lcActionsBottomMargin.constant = 0
-     UIView.animate(withDuration: 0.3) {
-     self.view.layoutIfNeeded()
-     }
-     }
-     @objc private func hideKeyboard() {
-     view.endEditing(true)
-     }
-     }
 
-     // MARK: - UITextFieldDelegate
-extension ContactOfPersonViewController: UITextFieldDelegate {
-     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        self.view.endEditing(true)
-     return true
-     }
-
-}*/
