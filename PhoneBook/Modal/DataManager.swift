@@ -12,32 +12,86 @@ final class DataManager {
     static let instance = DataManager()
     private init() {
         generatePerson()
-        curentChar = "А"
     }
 
-    private(set) var personsOfChar: [Person] = []
     private(set) var charOfAlphabet: [Character] = []
-    private(set) var persons: [Character: [Person]] = [:]
-
-    private(set) var curentChar: Character?
+    private var persons: [Character: [Person]] = [:]
 
     // MAPK: private methods
     private func generatePerson() {
         self.charOfAlphabet = ["А", "Д", "Ж", "Я"]
-        let person1 = Person(firstName: "Анна", lastName: "Иванова", pfoneNumber: 12345678)
-        let person2 = Person(firstName: "Антон", lastName: "Петров", pfoneNumber: 12345678)
-        let person3 = Person(firstName: "Андрей", lastName: "Сетченко", pfoneNumber: 12345678)
+        let person1 = Person(firstName: "Анна", lastName: "Иванова")
+        let person2 = Person(firstName: "Антон", lastName: "Петров")
+        let person3 = Person(firstName: "Андрей", lastName: "Сетченко")
         self.persons["А"] = [person1, person2, person3]
 
-        let person4 = Person(firstName: "Диана", lastName: "Васильева", pfoneNumber: 12345678)
-        let person5 = Person(firstName: "Дмитрий", lastName: "Вацлав", pfoneNumber: 12345678)
+        let person4 = Person(firstName: "Диана", lastName: "Васильева")
+        let person5 = Person(firstName: "Дмитрий", lastName: "Вацлав")
         self.persons["Д"] = [person4, person5]
 
-        let person6 = Person(firstName: "Жанна", lastName: "Умничева", pfoneNumber: 12345678)
+        let person6 = Person(firstName: "Жанна", lastName: "Умничева")
         self.persons["Ж"] = [person6]
 
-        let person7 = Person(firstName: "Яна", lastName: "Наченко", pfoneNumber: 12345678)
-        let person8 = Person(firstName: "Ярослав", lastName: "Томенко", pfoneNumber: 12345678)
+        let person7 = Person(firstName: "Яна", lastName: "Наченко")
+        let person8 = Person(firstName: "Ярослав", lastName: "Томенко")
         self.persons["Я"] = [person7, person8]
     }
+
+    private func findCharElseAddIt(_ char: Character) -> Bool {
+        // return true when char found
+        var index = -1
+        for (i,ch) in charOfAlphabet.enumerated() {
+            if ch == char {
+                return true
+            } else {
+                if ch < char { index = i }
+            }
+        }
+        charOfAlphabet.insert(char, at: index+1)
+        return false
+    }
+
+    // MARK: publik methods
+    func contacts(of character: Character) -> [Person] {
+        return persons[character] ?? []
+    }
+
+    func findPerson(_ person: Person, in persons: [Person]) -> Int? {
+        for (i, p) in persons.enumerated() {
+            if p == person {
+                return i
+            }
+        }
+        return nil
+    }
+
+    func changePerson(person: Person) {
+
+        let char = person.firstName[person.firstName.startIndex]
+        var persons = self.contacts(of: char)
+        let index = self.findPerson(person, in: persons) ?? 0
+
+        persons[index].setFirstName(name: person.firstName)
+        persons[index].setLastNAme(name: person.lastName)
+        if person.pfoneNumber != nil { persons[index].setPfoneNumber(pfoneNumber: person.pfoneNumber!) }
+        if person.email != nil { persons[index].setEmail(email: person.email!) }
+        if person.pfoto != nil { persons[index].setPfoto(pfoto: person.pfoto!) }
+        self.persons[char] = persons
+        NotificationCenter.default.post(name: .ContactDetailsChanged, object: nil)
+    }
+
+    func addPerson(person: Person) {
+        let char = person.firstName[person.firstName.startIndex]
+
+        if findCharElseAddIt(char) { //charOfAlphabet has this char
+            var personsOfChar = self.contacts(of: char)
+            personsOfChar.append(person)
+            personsOfChar.sort(by: { $0.firstName < $1.firstName })
+            self.persons[char] = personsOfChar
+        } else { //charOfAlphabet hasn't this char
+            self.persons[char] = [person]
+        }
+        NotificationCenter.default.post(name: .ContactAdded, object: nil)
+    }
+
 }

@@ -18,39 +18,51 @@ class ContactsViewController: UIViewController {
 
         tabelView.dataSource = self
         tabelView.delegate = self
+
+        addObservers()
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let destVC = segue.destination as? ContactOfPersonViewController,
-                segue.identifier == "detailsOfContact"
-            else {
-                fatalError("Error: It isn't detailsOfContact")
-            }
-        guard let cell = sender as? PersonTableViewCell,
-            let indexPath = tabelView.indexPath(for: cell)
-        else { return }
-        destVC.person = getPerson(indexPath: indexPath)
+        guard let destVC = segue.destination as? ContactOfPersonViewController
+            else { fatalError("Error: It isn't detailsOfContact") }
+
+        if segue.identifier == "detailsOfContact" {
+            guard let cell = sender as? PersonTableViewCell,
+                let indexPath = tabelView.indexPath(for: cell)
+            else { return }
+            destVC.person = getPerson(indexPath: indexPath)
+        }
     }
+
     // MARK: privat methods
+
     private func getPerson(indexPath: IndexPath) -> Person {
         let char = getCharacterOfAlphabet(section: indexPath.section)
-        let persons = DataManager.instance.persons[char]
-        guard let person = persons?[indexPath.row] else {
-            fatalError("Error: Person does't exist")
-        }
-        return person
+        let persons = DataManager.instance.contacts(of: char)
+        return persons[indexPath.row]
     }
     private func getCharacterOfAlphabet(section: Int) -> Character {
         let char = DataManager.instance.charOfAlphabet[section]
         return char
     }
 
+    private func addObservers() {
+        NotificationCenter.default.addObserver(self, selector:
+            #selector(changeCell(_:)), name: .ContactDetailsChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector:
+            #selector(changeCell(_:)), name: .ContactAdded, object: nil)
+    }
+
+    // MARK: public methods
+    @objc func changeCell(_ notification: Notification) {
+        tabelView.reloadData()
+    }
 }
 // MARK: extantion for ContactsViewController
 extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let char = getCharacterOfAlphabet(section: section)
-        let persons = DataManager.instance.persons[char] ?? []
+        let persons = DataManager.instance.contacts(of: char)
      return persons.count
     }
 

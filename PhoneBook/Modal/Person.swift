@@ -9,31 +9,42 @@
 import UIKit
 
 struct Person {
+    private static var objectCount = 0
+
+    private let id: Int
     private(set) var firstName: String
     private(set) var lastName: String
-    private(set) var pfoneNumber: Int
+    private(set) var pfoneNumber: Int?
     private(set) var pfoto: UIImage?
-    private(set) var emai: String?
+    private(set) var email: String?
 
-    init(firstName: String, lastName: String, pfoneNumber: Int) {
+    init(firstName: String, lastName: String) {
+        Person.objectCount += 1
+        self.id = Person.objectCount
         self.firstName = firstName
         self.lastName = lastName
-        self.pfoneNumber = pfoneNumber
     }
-    private mutating func setFirstName(name: String) {
+    mutating func setFirstName(name: String) {
         self.firstName = name
     }
-    private mutating func setLastNAme(name: String) {
+    mutating func setLastNAme(name: String) {
         self.lastName = name
     }
-    private mutating func setPfoneNumber(pfoneNumber: Int) {
+    mutating func setPfoneNumber(pfoneNumber: Int) {
         self.pfoneNumber = pfoneNumber
     }
-    private mutating func setPfoto(pfoto: UIImage) {
+    mutating func setPfoto(pfoto: UIImage) {
         self.pfoto = pfoto
     }
-    private mutating func setEmail(emai: String) {
-        self.emai = emai
+    mutating func setEmail(email: String) {
+        self.email = email
+    }
+
+}
+// MARK: extention Equatable
+extension Person: Equatable {
+    static func == (lhs: Person, rhs: Person) -> Bool {
+        return lhs.id == rhs.id
     }
 
 }
