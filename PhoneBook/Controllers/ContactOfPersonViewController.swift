@@ -28,7 +28,7 @@ class ContactOfPersonViewController: UIViewController {
         self.ibLastName.delegate = self
         self.ibPfone.delegate = self
         self.ibEmail.delegate = self
-        
+
         if person != nil {
             ibAddOrChangeButton.title = "Изменить"
             ibFirstName.text = person?.firstName
@@ -102,11 +102,11 @@ extension ContactOfPersonViewController: UITextFieldDelegate {
 
 // MARK: extention notification
 extension ContactOfPersonViewController {
-    @objc private func keyboardWillShow(_ notification:Notification) {
+    @objc private func keyboardWillShow(_ notification: Notification) {
 
     }
 
-    @objc private func keyboardWillHide(_ notification:Notification) {
+    @objc private func keyboardWillHide(_ notification: Notification) {
        // hideKeyboard()
     }
 }

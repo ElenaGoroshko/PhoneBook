@@ -51,6 +51,8 @@ class ContactsViewController: UIViewController {
             #selector(changeCell(_:)), name: .ContactDetailsChanged, object: nil)
         NotificationCenter.default.addObserver(self, selector:
             #selector(changeCell(_:)), name: .ContactAdded, object: nil)
+        NotificationCenter.default.addObserver(self, selector:
+            #selector(changeCell(_:)), name: .ContactDeleted, object: nil)
     }
 
     // MARK: public methods

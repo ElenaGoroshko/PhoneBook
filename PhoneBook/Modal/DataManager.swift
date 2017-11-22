@@ -56,7 +56,17 @@ final class DataManager {
         return persons[character] ?? []
     }
 
-    func findPerson(_ person: Person, in persons: [Person]) -> Int? {
+    func findPerson(_ person: Person) -> (Character?, Int?) { //return char and index if person.id exist
+        for ch in charOfAlphabet {
+            guard let persons = self.persons[ch] else { fatalError() }
+            for (i, p) in persons.enumerated() {
+                if p == person { return (ch, i) }
+            }
+        }
+      return(nil,nil)
+    }
+
+    func findPersonInSection(_ person: Person, in persons: [Person]) -> Int? {
         for (i, p) in persons.enumerated() {
             if p == person {
                 return i
@@ -67,17 +77,28 @@ final class DataManager {
 
     func changePerson(person: Person) {
 
+        var charOptional: Character?
+        var indexOptional: Int?
+        (charOptional, indexOptional) = findPerson(person)
         let char = person.firstName[person.firstName.startIndex]
-        var persons = self.contacts(of: char)
-        let index = self.findPerson(person, in: persons) ?? 0
+        guard let index = indexOptional else {fatalError("Error: The person isn't contained in a DataManager")}
 
-        persons[index].setFirstName(name: person.firstName)
-        persons[index].setLastNAme(name: person.lastName)
-        if person.pfoneNumber != nil { persons[index].setPfoneNumber(pfoneNumber: person.pfoneNumber!) }
-        if person.email != nil { persons[index].setEmail(email: person.email!) }
-        if person.pfoto != nil { persons[index].setPfoto(pfoto: person.pfoto!) }
-        self.persons[char] = persons
-        NotificationCenter.default.post(name: .ContactDetailsChanged, object: nil)
+        if char == charOptional { //the person is contained in a self.persons[char]
+            guard var persons = self.persons[char] else {fatalError("Error: The person isn't contained in a DataManager")}
+            persons[index].setFirstName(name: person.firstName)
+            persons[index].setLastNAme(name: person.lastName)
+            if person.pfoneNumber != nil { persons[index].setPfoneNumber(pfoneNumber: person.pfoneNumber!) }
+            if person.email != nil { persons[index].setEmail(email: person.email!) }
+            if person.pfoto != nil { persons[index].setPfoto(pfoto: person.pfoto!) }
+            self.persons[char] = persons
+            NotificationCenter.default.post(name: .ContactDetailsChanged, object: nil)
+
+        } else {  //the person is contained in a self.persons[charOptional]
+
+            deletePerson(person: person)
+            addPerson(person: person)
+        }
+        debugPrint(index)
     }
 
     func addPerson(person: Person) {
@@ -94,4 +115,14 @@ final class DataManager {
         NotificationCenter.default.post(name: .ContactAdded, object: nil)
     }
 
+    func deletePerson(person: Person) {
+        let (ch, i) = findPerson(person)
+        guard let char = ch else {fatalError("Error: The person isn't contained in a DataManager")}
+        guard let index = i else {fatalError("Error: The person isn't contained in a DataManager")}
+        var persons = self.contacts(of: char)
+        persons.remove(at: index)
+        self.persons[char] = persons
+        NotificationCenter.default.post(name: .ContactDeleted, object: nil)
+    }
+    
 }
