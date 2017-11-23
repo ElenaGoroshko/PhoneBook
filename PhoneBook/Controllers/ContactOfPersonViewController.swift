@@ -89,7 +89,6 @@ class ContactOfPersonViewController: UIViewController {
     @objc private func hideKeyboard() {
         view.endEditing(true)
     }
-
 }
 /*
  @IBAction func takePhoto(_ sender: UIButton) {
