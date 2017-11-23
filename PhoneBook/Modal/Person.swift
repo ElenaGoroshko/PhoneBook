@@ -11,7 +11,7 @@ import UIKit
 struct Person {
     private static var objectCount = 0
 
-    private let ident: Int
+    private let id: Int
     private(set) var firstName: String 
     private(set) var lastName: String
     private(set) var pfoneNumber: Int?
@@ -20,10 +20,10 @@ struct Person {
 
     init(firstName: String, lastName: String) {
         Person.objectCount += 1
-        self.ident = Person.objectCount
+        self.id = Person.objectCount
         self.firstName = firstName
         self.lastName = lastName
-        debugPrint("New person wifh id = ", ident)
+        debugPrint("New person wifh id = ", id)
     }
     mutating func setFirstName(name: String) {
         self.firstName = name
@@ -45,8 +45,8 @@ struct Person {
 // MARK: extention Equatable
 extension Person: Equatable {
     static func == (lhs: Person, rhs: Person) -> Bool {
-        debugPrint(lhs.ident, " = ", rhs.ident)
-        return lhs.ident == rhs.ident
+        debugPrint(lhs.id, " = ", rhs.id)
+        return lhs.id == rhs.id
     }
 
 }

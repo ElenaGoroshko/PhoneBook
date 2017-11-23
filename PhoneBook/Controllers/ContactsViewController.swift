@@ -87,4 +87,13 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
         return String(DataManager.instance.charOfAlphabet[section])
     }
 
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        guard editingStyle == .delete else { return }
+        let person = getPerson(indexPath: indexPath)
+        DataManager.instance.deletePerson(person)
+    }
 }

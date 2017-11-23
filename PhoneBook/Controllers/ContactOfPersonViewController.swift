@@ -61,11 +61,11 @@ class ContactOfPersonViewController: UIViewController {
         guard ibFirstName.text != nil, ibLastName.text != nil else { fatalError("Error: No name or lastname")}
         if person != nil {
             setPerson()
-            DataManager.instance.changePerson(person: person!)
+            DataManager.instance.changePerson(person!)
         } else {
             person = Person(firstName: ibFirstName.text!, lastName: ibFirstName.text!)
             setPerson()
-            DataManager.instance.addPerson(person: person!)
+            DataManager.instance.addPerson(person!)
         }
          navigationController?.popViewController(animated: true)
     }
@@ -91,6 +91,33 @@ class ContactOfPersonViewController: UIViewController {
     }
 
 }
+/*
+ @IBAction func takePhoto(_ sender: UIButton) {
+    imagePicker =  UIImagePickerController()
+    imagePicker.delegate = self
+    imagePicker.sourceType = .camera
+    present(imagePicker, animated: true, completion: nil)
+ }
+ 
+ //MARK: - Saving Image here
+ @IBAction func save(_ sender: AnyObject) {
+    UIImageWriteToSavedPhotosAlbum(imageTake.image!, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+ }
+ 
+ //MARK: - Add image to Library
+ func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
+    if let error = error {
+    // we got back an error!
+        let ac = UIAlertController(title: "Save error", message: error.localizedDescription, preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .default))
+        present(ac, animated: true)
+    } else {
+        let ac = UIAlertController(title: "Saved!", message: "Your altered image has been saved to your photos.", preferredStyle: .alert)
+        ac.addAction(UIAlertAction(title: "OK", style: .default))
+        present(ac, animated: true)
+ }
+ */
+
 // MARK: extention UITextFieldDelegate
 extension ContactOfPersonViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -110,4 +137,3 @@ extension ContactOfPersonViewController {
        // hideKeyboard()
     }
 }
-

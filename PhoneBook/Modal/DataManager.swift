@@ -40,14 +40,14 @@ final class DataManager {
     private func findCharElseAddIt(_ char: Character) -> Bool {
         // return true when char found
         var index = -1
-        for (i,ch) in charOfAlphabet.enumerated() {
+        for (i, ch) in charOfAlphabet.enumerated() {
             if ch == char {
                 return true
             } else {
                 if ch < char { index = i }
             }
         }
-        charOfAlphabet.insert(char, at: index+1)
+        charOfAlphabet.insert(char, at: index + 1)
         return false
     }
 
@@ -58,24 +58,22 @@ final class DataManager {
 
     func findPerson(_ person: Person) -> (Character?, Int?) { //return char and index if person.id exist
         for ch in charOfAlphabet {
-            guard let persons = self.persons[ch] else { fatalError() }
-            for (i, p) in persons.enumerated() {
-                if p == person { return (ch, i) }
+            guard let persons = self.persons[ch] else { return(nil, nil)}
+            for (i, p) in persons.enumerated() where p == person {
+                return (ch, i)
             }
         }
-      return(nil,nil)
+      return(nil, nil)
     }
 
     func findPersonInSection(_ person: Person, in persons: [Person]) -> Int? {
-        for (i, p) in persons.enumerated() {
-            if p == person {
+        for (i, p) in persons.enumerated() where p == person {
                 return i
-            }
         }
         return nil
     }
 
-    func changePerson(person: Person) {
+    func changePerson(_ person: Person) {
 
         var charOptional: Character?
         var indexOptional: Int?
@@ -95,13 +93,13 @@ final class DataManager {
 
         } else {  //the person is contained in a self.persons[charOptional]
 
-            deletePerson(person: person)
-            addPerson(person: person)
+            deletePerson(person)
+            addPerson(person)
         }
         debugPrint(index)
     }
 
-    func addPerson(person: Person) {
+    func addPerson(_ person: Person) {
         let char = person.firstName[person.firstName.startIndex]
 
         if findCharElseAddIt(char) { //charOfAlphabet has this char
@@ -115,13 +113,20 @@ final class DataManager {
         NotificationCenter.default.post(name: .ContactAdded, object: nil)
     }
 
-    func deletePerson(person: Person) {
+    func deleteSection(_ char: Character) {
+        for (i, ch) in self.charOfAlphabet.enumerated() where ch == char {
+           self.charOfAlphabet.remove(at: i)
+        }
+    }
+
+    func deletePerson(_ person: Person) {
         let (ch, i) = findPerson(person)
         guard let char = ch else {fatalError("Error: The person isn't contained in a DataManager")}
         guard let index = i else {fatalError("Error: The person isn't contained in a DataManager")}
         var persons = self.contacts(of: char)
         persons.remove(at: index)
         self.persons[char] = persons
+        if persons.isEmpty { deleteSection(char) }
         NotificationCenter.default.post(name: .ContactDeleted, object: nil)
     }
     
