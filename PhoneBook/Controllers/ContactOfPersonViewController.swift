@@ -58,12 +58,13 @@ class ContactOfPersonViewController: UIViewController {
     }
 
     @IBAction func buttonAddOrChangePressed(_ sender: UIBarButtonItem) {
-        guard ibFirstName.text != nil, ibLastName.text != nil else { fatalError("Error: No name or lastname")}
+        guard let firstname = ibFirstName.text,
+                let lastname = ibLastName.text else { fatalError("Error: No name or lastname")}
         if person != nil {
             setPerson()
             DataManager.instance.changePerson(person!)
         } else {
-            person = Person(firstName: ibFirstName.text!, lastName: ibFirstName.text!)
+            person = Person(firstName: firstname, lastName: lastname)
             setPerson()
             DataManager.instance.addPerson(person!)
         }
@@ -90,8 +91,8 @@ class ContactOfPersonViewController: UIViewController {
         view.endEditing(true)
     }
 }
-/*
- @IBAction func takePhoto(_ sender: UIButton) {
+// MARK: nfbafkjl
+/* @IBAction func takePhoto(_ sender: UIButton) {
     imagePicker =  UIImagePickerController()
     imagePicker.delegate = self
     imagePicker.sourceType = .camera
@@ -123,7 +124,6 @@ extension ContactOfPersonViewController: UITextFieldDelegate {
         hideKeyboard()
         return true
     }
-
 }
 
 // MARK: extention notification

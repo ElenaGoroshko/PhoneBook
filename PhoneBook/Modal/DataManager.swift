@@ -129,5 +129,16 @@ final class DataManager {
         if persons.isEmpty { deleteSection(char) }
         NotificationCenter.default.post(name: .ContactDeleted, object: nil)
     }
-    
+
+    func serchPerson( byName name: String) -> [Person] {
+        var filteredPerson: [Person] = []
+        for char in self.charOfAlphabet {
+            let persons = self.persons[char] ?? []
+            for person in persons where person.firstName.lowercased().contains(name.lowercased()) ||
+                                        person.lastName.lowercased().contains(name.lowercased()) {
+                filteredPerson.append(person)
+            }
+        }
+        return filteredPerson
+    }
 }

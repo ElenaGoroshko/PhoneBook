@@ -11,14 +11,20 @@ import UIKit
 class ContactsViewController: UIViewController {
 
     @IBOutlet private weak var tabelView: UITableView!
+    @IBOutlet private weak var ibSearchBar: UISearchBar!
 
+    private var filteredContacts: [Person] = []
+    private var isSerchActive = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Контакты"
+        ibSearchBar.delegate = self
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
+        view.addGestureRecognizer(tapRecognizer)
 
         tabelView.dataSource = self
         tabelView.delegate = self
-
         addObservers()
     }
 
@@ -29,8 +35,8 @@ class ContactsViewController: UIViewController {
         if segue.identifier == "detailsOfContact" {
             guard let cell = sender as? PersonTableViewCell,
                 let indexPath = tabelView.indexPath(for: cell)
-            else { return }
-            destVC.person = getPerson(indexPath: indexPath)
+                else { return }
+            destVC.person = isSerchActive ? filteredContacts[indexPath.row] : getPerson(indexPath: indexPath)
         }
     }
 
@@ -55,17 +61,32 @@ class ContactsViewController: UIViewController {
             #selector(changeCell(_:)), name: .ContactDeleted, object: nil)
     }
 
+    private func filterContent(byName name: String) {
+        isSerchActive = !name.isEmpty
+        filteredContacts = DataManager.instance.serchPerson(byName: name)
+        debugPrint(isSerchActive)
+        tabelView.reloadData()
+    }
+    @objc private func hideKeyboard() {
+        view.endEditing(true)
+    }
+
     // MARK: public methods
     @objc func changeCell(_ notification: Notification) {
         tabelView.reloadData()
     }
+    
 }
-// MARK: extantion for ContactsViewController
+// MARK: UITableViewDelegate, UITableViewDataSource
 extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let char = getCharacterOfAlphabet(section: section)
-        let persons = DataManager.instance.contacts(of: char)
-     return persons.count
+        if isSerchActive {
+            return filteredContacts.count
+        } else {
+            let char = getCharacterOfAlphabet(section: section)
+            let persons = DataManager.instance.contacts(of: char)
+            return persons.count
+        }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -73,7 +94,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
             else {
                 fatalError("Error: Cell does't exist")
         }
-        let person = getPerson(indexPath: indexPath)
+        let person = isSerchActive ? filteredContacts[indexPath.row] : getPerson(indexPath: indexPath)
         cell.update(firstName: person.firstName, lastName: person.lastName)
         return cell
     }
@@ -81,10 +102,10 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
         return 70
     }
     func numberOfSections(in tableView: UITableView) -> Int {
-        return DataManager.instance.charOfAlphabet.count
+        return isSerchActive ? 1 : DataManager.instance.charOfAlphabet.count
     }
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return String(DataManager.instance.charOfAlphabet[section])
+        return isSerchActive ? "Resul of serch" : String(DataManager.instance.charOfAlphabet[section])
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -95,5 +116,18 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
         guard editingStyle == .delete else { return }
         let person = getPerson(indexPath: indexPath)
         DataManager.instance.deletePerson(person)
+    }
+}
+// MARK: UISearchBarDelegate
+extension ContactsViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filterContent(byName: searchText)
+    }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        hideKeyboard()
+    }
+    func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+        hideKeyboard()
     }
 }
