@@ -85,14 +85,12 @@ final class DataManager {
             guard var persons = self.persons[char] else {fatalError("Error: The person isn't contained in a DataManager")}
             persons[index].setFirstName(name: person.firstName)
             persons[index].setLastNAme(name: person.lastName)
-            if person.pfoneNumber != nil { persons[index].setPfoneNumber(pfoneNumber: person.pfoneNumber!) }
-            if person.email != nil { persons[index].setEmail(email: person.email!) }
-            if person.pfoto != nil { persons[index].setPfoto(pfoto: person.pfoto!) }
+            persons[index].setPfoneNumber(pfoneNumber: person.pfoneNumber)
+            persons[index].setEmail(email: person.email)
+            persons[index].setPfoto(pfoto: person.pfoto)
             self.persons[char] = persons
             NotificationCenter.default.post(name: .ContactDetailsChanged, object: nil)
-
         } else {  //the person is contained in a self.persons[charOptional]
-
             deletePerson(person)
             addPerson(person)
         }

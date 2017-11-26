@@ -11,6 +11,7 @@ import UIKit
 class ContactOfPersonViewController: UIViewController {
 
     var person: Person?
+    var imagePicker: UIImagePickerController!
 
     @IBOutlet private weak var ibLastName: UITextField!
     @IBOutlet private weak var ibFirstName: UITextField!
@@ -18,17 +19,26 @@ class ContactOfPersonViewController: UIViewController {
     @IBOutlet private weak var ibEmail: UITextField!
     @IBOutlet private weak var ibImage: UIImageView!
     @IBOutlet private weak var ibAddOrChangeButton: UIBarButtonItem!
-
+    @IBOutlet private var parentView: UIView!
+    @IBOutlet private weak var imageView: UIView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-        view.addGestureRecognizer(tapRecognizer)
 
         self.ibFirstName.delegate = self
         self.ibLastName.delegate = self
         self.ibPfone.delegate = self
         self.ibEmail.delegate = self
-
+        
+//        self.imagePicker = UIImagePickerController()
+//        self.imagePicker.delegate = self
+//        self.imagePicker.sourceType = .photoLibrary
+        
+        let tapGestureImage = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerViewAndImage(_:)))
+        imageView.addGestureRecognizer(tapGestureImage)
+        let tapGestureViev = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerViewAndImage(_:)))
+        parentView.addGestureRecognizer(tapGestureViev)
+        
         if person != nil {
             ibAddOrChangeButton.title = "Изменить"
             ibFirstName.text = person?.firstName
@@ -49,7 +59,7 @@ class ContactOfPersonViewController: UIViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        addNotification()
+        addNotificationKeyboard()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -71,28 +81,36 @@ class ContactOfPersonViewController: UIViewController {
          navigationController?.popViewController(animated: true)
     }
     private func setPerson() {
-        person?.setFirstName(name: ibFirstName.text!)
-        person?.setLastNAme(name: ibLastName.text!)
+        guard let firstName = ibFirstName.text else { return }
+        person?.setFirstName(name: firstName )
+        guard let lastName = ibLastName.text else { return }
+        person?.setLastNAme(name: lastName )
         let numStr = Int(ibPfone.text ?? "0") ?? 0
         if numStr != 0 {
             person?.setPfoneNumber(pfoneNumber: numStr)
         }
-        if ibEmail.text != nil { person?.setEmail(email: ibEmail.text!) }
-        if ibImage.image != nil { person?.setPfoto(pfoto: ibImage.image!) }
+        person?.setEmail(email: ibEmail.text)
+        person?.setPfoto(pfoto: ibImage.image) 
     }
 
-    private func addNotification() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)),
-                                               name: .UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)),
-                                               name: .UIKeyboardWillHide, object: nil)
-    }
-    @objc private func hideKeyboard() {
-        view.endEditing(true)
+    @objc private func tapRecognizerViewAndImage(_ sender: UITapGestureRecognizer) {        
+        if sender.view == imageView {
+            ibImage.image = nil
+        } else {
+            hideKeyboard()
+        }
     }
 }
 // MARK: nfbafkjl
-/* @IBAction func takePhoto(_ sender: UIButton) {
+/*class ViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate  {
+ 
+ @IBOutlet weak var imageTake: UIImageView!
+ 
+ var imagePicker: UIImagePickerController!
+ override func viewDidLoad() {
+ super.viewDidLoad()
+ }
+ @IBAction func takePhoto(_ sender: UIButton) {
     imagePicker =  UIImagePickerController()
     imagePicker.delegate = self
     imagePicker.sourceType = .camera
@@ -128,6 +146,17 @@ extension ContactOfPersonViewController: UITextFieldDelegate {
 
 // MARK: extention notification
 extension ContactOfPersonViewController {
+
+    private func addNotificationKeyboard() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)),
+                                               name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)),
+                                               name: .UIKeyboardWillHide, object: nil)
+    }
+    @objc private func hideKeyboard() {
+        view.endEditing(true)
+    }
+    
     @objc private func keyboardWillShow(_ notification: Notification) {
 
     }
@@ -135,4 +164,7 @@ extension ContactOfPersonViewController {
     @objc private func keyboardWillHide(_ notification: Notification) {
        // hideKeyboard()
     }
+}
+extension ContactOfPersonViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
 }

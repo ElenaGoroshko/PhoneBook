@@ -31,13 +31,13 @@ struct Person {
     mutating func setLastNAme(name: String) {
         self.lastName = name
     }
-    mutating func setPfoneNumber(pfoneNumber: Int) {
+    mutating func setPfoneNumber(pfoneNumber: Int?) {
         self.pfoneNumber = pfoneNumber
     }
-    mutating func setPfoto(pfoto: UIImage) {
+    mutating func setPfoto(pfoto: UIImage?) {
         self.pfoto = pfoto
     }
-    mutating func setEmail(email: String) {
+    mutating func setEmail(email: String?) {
         self.email = email
     }
 

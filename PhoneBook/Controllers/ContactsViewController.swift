@@ -20,12 +20,17 @@ class ContactsViewController: UIViewController {
         super.viewDidLoad()
         self.title = "Контакты"
         ibSearchBar.delegate = self
-        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(hideKeyboard))
-        view.addGestureRecognizer(tapRecognizer)
 
         tabelView.dataSource = self
         tabelView.delegate = self
-        addObservers()
+        addObserversContacts()
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        addObserversKeyboard()
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        removeObserversKeyboard()
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -41,7 +46,6 @@ class ContactsViewController: UIViewController {
     }
 
     // MARK: privat methods
-
     private func getPerson(indexPath: IndexPath) -> Person {
         let char = getCharacterOfAlphabet(section: indexPath.section)
         let persons = DataManager.instance.contacts(of: char)
@@ -52,33 +56,19 @@ class ContactsViewController: UIViewController {
         return char
     }
 
-    private func addObservers() {
-        NotificationCenter.default.addObserver(self, selector:
-            #selector(changeCell(_:)), name: .ContactDetailsChanged, object: nil)
-        NotificationCenter.default.addObserver(self, selector:
-            #selector(changeCell(_:)), name: .ContactAdded, object: nil)
-        NotificationCenter.default.addObserver(self, selector:
-            #selector(changeCell(_:)), name: .ContactDeleted, object: nil)
-    }
-
     private func filterContent(byName name: String) {
         isSerchActive = !name.isEmpty
         filteredContacts = DataManager.instance.serchPerson(byName: name)
         debugPrint(isSerchActive)
         tabelView.reloadData()
     }
-    @objc private func hideKeyboard() {
-        view.endEditing(true)
-    }
 
     // MARK: public methods
-    @objc func changeCell(_ notification: Notification) {
-        tabelView.reloadData()
-    }
     
 }
 // MARK: UITableViewDelegate, UITableViewDataSource
 extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isSerchActive {
             return filteredContacts.count
@@ -98,12 +88,15 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
         cell.update(firstName: person.firstName, lastName: person.lastName)
         return cell
     }
+
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 70
     }
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return isSerchActive ? 1 : DataManager.instance.charOfAlphabet.count
     }
+
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return isSerchActive ? "Resul of serch" : String(DataManager.instance.charOfAlphabet[section])
     }
@@ -117,6 +110,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
         let person = getPerson(indexPath: indexPath)
         DataManager.instance.deletePerson(person)
     }
+
 }
 // MARK: UISearchBarDelegate
 extension ContactsViewController: UISearchBarDelegate {
@@ -129,5 +123,48 @@ extension ContactsViewController: UISearchBarDelegate {
     }
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         hideKeyboard()
+    }
+}
+// MARK: extention notifications
+extension ContactsViewController {
+    
+    private func addObserversContacts() {
+        NotificationCenter.default.addObserver(self, selector:
+            #selector(changeCell(_:)), name: .ContactDetailsChanged, object: nil)
+        NotificationCenter.default.addObserver(self, selector:
+            #selector(changeCell(_:)), name: .ContactAdded, object: nil)
+        NotificationCenter.default.addObserver(self, selector:
+            #selector(changeCell(_:)), name: .ContactDeleted, object: nil)
+    }
+    
+    private func  addObserversKeyboard() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)),
+                                               name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)),
+                                               name: .UIKeyboardWillHide, object: nil)
+    }
+    private func  removeObserversKeyboard() {
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
+    }
+    @objc private func keyboardWillShow(_ notification: Notification) {
+        
+    }
+    @objc private func keyboardWillHide(_ notification: Notification) {
+        hideKeyboard()
+    }
+    @objc private func hideKeyboard() {
+        view.endEditing(true)
+    }
+    @objc func changeCell(_ notification: Notification) {
+        if isSerchActive {
+            guard let searchText = self.ibSearchBar.text
+                else {
+                    tabelView.reloadData()
+                    return
+            }
+            filterContent(byName: searchText)
+        }
+        tabelView.reloadData()
     }
 }

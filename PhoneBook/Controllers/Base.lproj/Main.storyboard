@@ -132,7 +132,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="xIf-cj-czr">
-                                <rect key="frame" x="20" y="224" width="335" height="237"/>
+                                <rect key="frame" x="20" y="264" width="335" height="237"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" Имя" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bqx-gI-ZAR">
                                         <rect key="frame" x="0.0" y="0.0" width="335" height="24"/>
@@ -194,23 +194,36 @@
                                     <constraint firstItem="C6x-RN-9VC" firstAttribute="centerX" secondItem="xIf-cj-czr" secondAttribute="centerX" id="pw8-0p-ICJ"/>
                                 </constraints>
                             </stackView>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4CQ-W7-DIr">
-                                <rect key="frame" x="127.5" y="74" width="120" height="120"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yxg-nq-7TF">
+                                <rect key="frame" x="127" y="104" width="120" height="120"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4CQ-W7-DIr">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
+                                        <gestureRecognizers/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="4CQ-W7-DIr" secondAttribute="height" multiplier="1:1" id="79r-Cu-fCl"/>
+                                            <constraint firstAttribute="width" constant="120" id="TdK-HW-LvG"/>
+                                            <constraint firstAttribute="height" constant="120" id="cjL-Jf-RNV"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" secondItem="4CQ-W7-DIr" secondAttribute="height" multiplier="1:1" id="79r-Cu-fCl"/>
-                                    <constraint firstAttribute="width" priority="750" constant="120" id="fEU-Ds-mBt"/>
-                                    <constraint firstAttribute="height" priority="750" constant="120" id="pqW-hA-p2u"/>
+                                    <constraint firstAttribute="bottom" secondItem="4CQ-W7-DIr" secondAttribute="bottom" id="Gn6-jI-mbO"/>
+                                    <constraint firstAttribute="trailing" secondItem="4CQ-W7-DIr" secondAttribute="trailing" id="LbE-ig-HeW"/>
+                                    <constraint firstItem="4CQ-W7-DIr" firstAttribute="leading" secondItem="yxg-nq-7TF" secondAttribute="leading" id="Qq3-rZ-m7w"/>
+                                    <constraint firstItem="4CQ-W7-DIr" firstAttribute="top" secondItem="yxg-nq-7TF" secondAttribute="top" id="c1L-7D-xzY"/>
                                 </constraints>
-                            </imageView>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="4CQ-W7-DIr" firstAttribute="top" secondItem="2hy-EP-jp6" secondAttribute="top" constant="10" id="6rL-nk-ccX"/>
                             <constraint firstItem="xIf-cj-czr" firstAttribute="centerX" secondItem="zus-iP-m9y" secondAttribute="centerX" id="G7n-Pp-U5H"/>
+                            <constraint firstItem="xIf-cj-czr" firstAttribute="top" secondItem="yxg-nq-7TF" secondAttribute="bottom" constant="40" id="Qny-qa-3te"/>
                             <constraint firstItem="2hy-EP-jp6" firstAttribute="trailing" secondItem="xIf-cj-czr" secondAttribute="trailing" constant="20" id="TB4-7r-FGg"/>
-                            <constraint firstItem="xIf-cj-czr" firstAttribute="top" secondItem="4CQ-W7-DIr" secondAttribute="bottom" constant="30" id="a56-uG-Sej"/>
+                            <constraint firstItem="yxg-nq-7TF" firstAttribute="top" secondItem="2hy-EP-jp6" secondAttribute="top" constant="40" id="WVk-Ct-AZ0"/>
+                            <constraint firstItem="yxg-nq-7TF" firstAttribute="centerX" secondItem="zus-iP-m9y" secondAttribute="centerX" id="byK-mU-7u1"/>
                             <constraint firstItem="xIf-cj-czr" firstAttribute="leading" secondItem="2hy-EP-jp6" secondAttribute="leading" constant="20" id="g9O-XP-POO"/>
-                            <constraint firstItem="4CQ-W7-DIr" firstAttribute="centerX" secondItem="zus-iP-m9y" secondAttribute="centerX" id="wj3-22-WjQ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="2hy-EP-jp6"/>
                     </view>
@@ -230,6 +243,8 @@
                         <outlet property="ibImage" destination="4CQ-W7-DIr" id="nIJ-Fu-Jyj"/>
                         <outlet property="ibLastName" destination="1BH-XH-1ml" id="Gs2-NN-PSJ"/>
                         <outlet property="ibPfone" destination="C39-5o-ooV" id="jyf-Vk-fHg"/>
+                        <outlet property="imageView" destination="yxg-nq-7TF" id="mTq-B4-exF"/>
+                        <outlet property="parentView" destination="zus-iP-m9y" id="ahT-4h-QxR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ap6-Cl-3ul" userLabel="First Responder" sceneMemberID="firstResponder"/>
