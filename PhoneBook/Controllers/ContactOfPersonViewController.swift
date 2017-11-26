@@ -29,11 +29,7 @@ class ContactOfPersonViewController: UIViewController {
         self.ibLastName.delegate = self
         self.ibPfone.delegate = self
         self.ibEmail.delegate = self
-        
-//        self.imagePicker = UIImagePickerController()
-//        self.imagePicker.delegate = self
-//        self.imagePicker.sourceType = .photoLibrary
-        
+
         let tapGestureImage = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerViewAndImage(_:)))
         imageView.addGestureRecognizer(tapGestureImage)
         let tapGestureViev = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerViewAndImage(_:)))
@@ -95,7 +91,7 @@ class ContactOfPersonViewController: UIViewController {
 
     @objc private func tapRecognizerViewAndImage(_ sender: UITapGestureRecognizer) {        
         if sender.view == imageView {
-            ibImage.image = nil
+            intitializationPfoto()
         } else {
             hideKeyboard()
         }
@@ -166,5 +162,21 @@ extension ContactOfPersonViewController {
     }
 }
 extension ContactOfPersonViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    
+    private func intitializationPfoto() {
+        self.imagePicker = UIImagePickerController()
+        self.imagePicker.delegate = self
+        self.imagePicker.sourceType = .photoLibrary
+        present(imagePicker, animated: true, completion: nil)
+    }
+
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [String: Any]) {
+        if let im = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            ibImage.image = im
+        } else {
+            print("Something went wrong")
+        }
+        imagePicker.dismiss(animated: true, completion: nil)
+    }
+
 }
