@@ -56,7 +56,7 @@ final class DataManager {
         return persons[character] ?? []
     }
 
-    func findPerson(_ person: Person) -> (Character?, Int?) { //return char and index if person.id exist
+    func findPerson(_ person: Person) -> (Character?, Int?) { //return char and index if person exist
         for ch in charOfAlphabet {
             guard let persons = self.persons[ch] else { return(nil, nil)}
             for (i, p) in persons.enumerated() where p == person {
@@ -66,23 +66,22 @@ final class DataManager {
       return(nil, nil)
     }
 
-    func findPersonInSection(_ person: Person, in persons: [Person]) -> Int? {
-        for (i, p) in persons.enumerated() where p == person {
-                return i
-        }
-        return nil
-    }
-
     func changePerson(_ person: Person) {
 
         var charOptional: Character?
         var indexOptional: Int?
         (charOptional, indexOptional) = findPerson(person)
         let char = person.firstName[person.firstName.startIndex]
-        guard let index = indexOptional else {fatalError("Error: The person isn't contained in a DataManager")}
+        guard let index = indexOptional else {
+            debugPrint("Error: The person isn't contained in a DataManager")
+            return
+        }
 
         if char == charOptional { //the person is contained in a self.persons[char]
-            guard var persons = self.persons[char] else {fatalError("Error: The person isn't contained in a DataManager")}
+            guard var persons = self.persons[char] else {
+                debugPrint("Error: The person isn't contained in a DataManager")
+                return
+            }
             persons[index].setFirstName(name: person.firstName)
             persons[index].setLastNAme(name: person.lastName)
             persons[index].setPfoneNumber(pfoneNumber: person.pfoneNumber)
@@ -119,8 +118,14 @@ final class DataManager {
 
     func deletePerson(_ person: Person) {
         let (ch, i) = findPerson(person)
-        guard let char = ch else {fatalError("Error: The person isn't contained in a DataManager")}
-        guard let index = i else {fatalError("Error: The person isn't contained in a DataManager")}
+        guard let char = ch else {
+            debugPrint("Error: The person isn't contained in a DataManager")
+            return
+        }
+        guard let index = i else {
+            debugPrint("Error: The person isn't contained in a DataManager")
+            return
+        }
         var persons = self.contacts(of: char)
         persons.remove(at: index)
         self.persons[char] = persons

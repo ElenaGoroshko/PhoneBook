@@ -168,14 +168,14 @@ extension ContactOfPersonViewController {
     }
     @objc private func hideKeyboard() {
         view.endEditing(true)
+        reloadConstraints(top: 60, margin: 60)
     }
     
     @objc private func keyboardWillShow(_ notification: Notification) {
         guard let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
-        }        
-       // lcStackViewMargin.constant = keyboardFrame.size.height + 10
-        reloadConstraints(top: 40, margin: keyboardFrame.size.height)
+        }
+        reloadConstraints(top: 60, margin: keyboardFrame.size.height)
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
@@ -210,8 +210,15 @@ extension ContactOfPersonViewController: UIImagePickerControllerDelegate, UINavi
     }
 
     private func addPfotoFromCamera() {
-        self.imagePicker.sourceType = .camera
-        present(imagePicker, animated: true, completion: nil)
+        if UIImagePickerController.isSourceTypeAvailable(.camera) {//isCameraDeviceAvailable
+            self.imagePicker.sourceType = .camera
+            present(self.imagePicker, animated: true, completion: nil)
+        } else {
+            let alert = UIAlertController(title: "Ошибка", message: "Камера не работает", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+        }
+
     }
     
     private func initPfoto() {

@@ -36,8 +36,10 @@ class ContactsViewController: UIViewController {
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        guard let destVC = segue.destination as? ContactOfPersonViewController
-            else { fatalError("Error: It isn't detailsOfContact") }
+        guard let destVC = segue.destination as? ContactOfPersonViewController else {
+            debugPrint("Error: It isn't detailsOfContact")
+            return
+        }
 
         if segue.identifier == "detailsOfContact" {
             guard let cell = sender as? PersonTableViewCell,
@@ -64,9 +66,7 @@ class ContactsViewController: UIViewController {
         debugPrint(isSerchActive)
         tabelView.reloadData()
     }
-
-    // MARK: public methods
-    
+   
 }
 // MARK: UITableViewDelegate, UITableViewDataSource
 extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
@@ -83,9 +83,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "PersonCell") as? PersonTableViewCell
-            else {
-                fatalError("Error: Cell does't exist")
-        }
+            else { fatalError("Error: Cell does't exist") }
         let person = isSerchActive ? filteredContacts[indexPath.row] : getPerson(indexPath: indexPath)
         cell.update(firstName: person.firstName, lastName: person.lastName)
         return cell
@@ -108,7 +106,7 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        guard editingStyle == .delete else { return }
+        guard editingStyle == .delete else { fatalError("Error: Delete don't work")  }
         let person = getPerson(indexPath: indexPath)
         DataManager.instance.deletePerson(person)
     }
