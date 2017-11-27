@@ -132,7 +132,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="3" translatesAutoresizingMaskIntoConstraints="NO" id="xIf-cj-czr">
-                                <rect key="frame" x="20" y="264" width="335" height="237"/>
+                                <rect key="frame" x="20" y="286" width="335" height="237"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" Имя" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bqx-gI-ZAR">
                                         <rect key="frame" x="0.0" y="0.0" width="335" height="24"/>
@@ -184,6 +184,7 @@
                                     </textField>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstAttribute="height" constant="237" id="6Yn-dq-9zs"/>
                                     <constraint firstItem="1BH-XH-1ml" firstAttribute="centerX" secondItem="xIf-cj-czr" secondAttribute="centerX" id="7uq-V9-KMi"/>
                                     <constraint firstItem="C39-5o-ooV" firstAttribute="centerX" secondItem="xIf-cj-czr" secondAttribute="centerX" id="A8k-Ad-aGQ"/>
                                     <constraint firstItem="bqx-gI-ZAR" firstAttribute="centerX" secondItem="xIf-cj-czr" secondAttribute="centerX" id="AHw-jy-v39"/>
@@ -195,7 +196,7 @@
                                 </constraints>
                             </stackView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="yxg-nq-7TF">
-                                <rect key="frame" x="127" y="104" width="120" height="120"/>
+                                <rect key="frame" x="127.5" y="104" width="120" height="120"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="4CQ-W7-DIr">
                                         <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
@@ -203,7 +204,7 @@
                                         <constraints>
                                             <constraint firstAttribute="width" secondItem="4CQ-W7-DIr" secondAttribute="height" multiplier="1:1" id="79r-Cu-fCl"/>
                                             <constraint firstAttribute="width" constant="120" id="TdK-HW-LvG"/>
-                                            <constraint firstAttribute="height" constant="120" id="cjL-Jf-RNV"/>
+                                            <constraint firstAttribute="height" relation="lessThanOrEqual" priority="750" constant="120" id="cjL-Jf-RNV"/>
                                         </constraints>
                                     </imageView>
                                 </subviews>
@@ -218,10 +219,11 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="yxg-nq-7TF" firstAttribute="top" secondItem="2hy-EP-jp6" secondAttribute="top" priority="750" constant="40" id="0qi-81-wmT"/>
                             <constraint firstItem="xIf-cj-czr" firstAttribute="centerX" secondItem="zus-iP-m9y" secondAttribute="centerX" id="G7n-Pp-U5H"/>
-                            <constraint firstItem="xIf-cj-czr" firstAttribute="top" secondItem="yxg-nq-7TF" secondAttribute="bottom" constant="40" id="Qny-qa-3te"/>
+                            <constraint firstItem="xIf-cj-czr" firstAttribute="top" relation="greaterThanOrEqual" secondItem="yxg-nq-7TF" secondAttribute="bottom" priority="750" constant="40" id="Qny-qa-3te"/>
                             <constraint firstItem="2hy-EP-jp6" firstAttribute="trailing" secondItem="xIf-cj-czr" secondAttribute="trailing" constant="20" id="TB4-7r-FGg"/>
-                            <constraint firstItem="yxg-nq-7TF" firstAttribute="top" secondItem="2hy-EP-jp6" secondAttribute="top" constant="40" id="WVk-Ct-AZ0"/>
+                            <constraint firstItem="2hy-EP-jp6" firstAttribute="bottom" secondItem="xIf-cj-czr" secondAttribute="bottom" constant="100" id="TnW-sJ-qHX"/>
                             <constraint firstItem="yxg-nq-7TF" firstAttribute="centerX" secondItem="zus-iP-m9y" secondAttribute="centerX" id="byK-mU-7u1"/>
                             <constraint firstItem="xIf-cj-czr" firstAttribute="leading" secondItem="2hy-EP-jp6" secondAttribute="leading" constant="20" id="g9O-XP-POO"/>
                         </constraints>
@@ -244,6 +246,11 @@
                         <outlet property="ibLastName" destination="1BH-XH-1ml" id="Gs2-NN-PSJ"/>
                         <outlet property="ibPfone" destination="C39-5o-ooV" id="jyf-Vk-fHg"/>
                         <outlet property="imageView" destination="yxg-nq-7TF" id="mTq-B4-exF"/>
+                        <outlet property="lcImageHeight" destination="cjL-Jf-RNV" id="ov3-4P-XR4"/>
+                        <outlet property="lcImageTop" destination="0qi-81-wmT" id="amL-Oq-44n"/>
+                        <outlet property="lcStackViewHeight" destination="6Yn-dq-9zs" id="cdq-Xx-22Z"/>
+                        <outlet property="lcStackViewMargin" destination="TnW-sJ-qHX" id="yFs-0X-SC4"/>
+                        <outlet property="lcStackViewToImage" destination="Qny-qa-3te" id="rgg-EG-dZT"/>
                         <outlet property="parentView" destination="zus-iP-m9y" id="ahT-4h-QxR"/>
                     </connections>
                 </viewController>

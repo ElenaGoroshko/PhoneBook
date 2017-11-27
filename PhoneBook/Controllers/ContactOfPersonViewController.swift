@@ -21,10 +21,18 @@ class ContactOfPersonViewController: UIViewController {
     @IBOutlet private weak var ibAddOrChangeButton: UIBarButtonItem!
     @IBOutlet private var parentView: UIView!
     @IBOutlet private weak var imageView: UIView!
+
+    @IBOutlet private weak var lcImageTop: NSLayoutConstraint!
+    @IBOutlet private weak var lcStackViewToImage: NSLayoutConstraint!
+    @IBOutlet private weak var lcImageHeight: NSLayoutConstraint!
+    
+    @IBOutlet private weak var lcStackViewHeight: NSLayoutConstraint!
+    
+    @IBOutlet private weak var lcStackViewMargin: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        initPfoto()
         self.ibFirstName.delegate = self
         self.ibLastName.delegate = self
         self.ibPfone.delegate = self
@@ -34,7 +42,12 @@ class ContactOfPersonViewController: UIViewController {
         imageView.addGestureRecognizer(tapGestureImage)
         let tapGestureViev = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerViewAndImage(_:)))
         parentView.addGestureRecognizer(tapGestureViev)
-        
+
+        ibImage.layer.cornerRadius = ibImage.frame.size.height / 2
+        ibImage.contentMode = .scaleAspectFill
+        ibImage.layer.masksToBounds = true
+        reloadConstraints(top: 60, margin: 60)
+
         if person != nil {
             ibAddOrChangeButton.title = "Изменить"
             ibFirstName.text = person?.firstName
@@ -77,60 +90,64 @@ class ContactOfPersonViewController: UIViewController {
          navigationController?.popViewController(animated: true)
     }
     private func setPerson() {
-        guard let firstName = ibFirstName.text else { return }
-        person?.setFirstName(name: firstName )
-        guard let lastName = ibLastName.text else { return }
-        person?.setLastNAme(name: lastName )
-        let numStr = Int(ibPfone.text ?? "0") ?? 0
-        if numStr != 0 {
-            person?.setPfoneNumber(pfoneNumber: numStr)
+        guard let firstName: String = ibFirstName.text, firstName.count > 1 else {
+            let alert = UIAlertController(title: "Ошибка", message: "Имя должно содержать больше 1 символа", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+            return
         }
-        person?.setEmail(email: ibEmail.text)
+        person?.setFirstName(name: firstName )
+        guard let lastName = ibLastName.text, lastName.count > 1 else {
+            let alert = UIAlertController(title: "Ошибка", message: "Фамилия должнa содержать больше 1 символа", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+            return
+        }
+        person?.setLastNAme(name: lastName )
+        
+        if ibPfone.text?.isEmpty == false {
+            let numStr = Int(ibPfone.text ?? "0") ?? 0
+            if numStr == 0 {
+                let alert = UIAlertController(title: "Ошибка", message: "Некорректный номер телефона", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default))
+                present(alert, animated: true)
+                return
+            } else {
+                person?.setPfoneNumber(pfoneNumber: numStr)
+            }
+        }
+        if ibEmail.text?.isEmpty == false,
+            ibEmail.text?.index(of: "@") == nil {
+            let alert = UIAlertController(title: "Ошибка", message: "Некорректный eMail", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+            return
+        } else {
+            person?.setEmail(email: ibEmail.text)
+        }
         person?.setPfoto(pfoto: ibImage.image) 
     }
 
     @objc private func tapRecognizerViewAndImage(_ sender: UITapGestureRecognizer) {        
         if sender.view == imageView {
-            intitializationPfoto()
+            let alertVC = UIAlertController(title: "Добавить фото", message: "Добавить фото из галереи или камеры?", preferredStyle: .actionSheet)
+            let galleryAction = UIAlertAction(title: "Галерея", style: .default, handler: { [weak self] _ in
+                self?.addPfotoFromGallery()
+            })
+            
+            let cameraAction = UIAlertAction(title: "Камера", style: .default, handler: { [weak self] _ in
+                self?.addPfotoFromCamera()
+            })
+            
+            alertVC.addAction(galleryAction)
+            alertVC.addAction(cameraAction)
+            self.present(alertVC, animated: true, completion: nil)
+            
         } else {
             hideKeyboard()
         }
     }
 }
-// MARK: nfbafkjl
-/*class ViewController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate  {
- 
- @IBOutlet weak var imageTake: UIImageView!
- 
- var imagePicker: UIImagePickerController!
- override func viewDidLoad() {
- super.viewDidLoad()
- }
- @IBAction func takePhoto(_ sender: UIButton) {
-    imagePicker =  UIImagePickerController()
-    imagePicker.delegate = self
-    imagePicker.sourceType = .camera
-    present(imagePicker, animated: true, completion: nil)
- }
- 
- //MARK: - Saving Image here
- @IBAction func save(_ sender: AnyObject) {
-    UIImageWriteToSavedPhotosAlbum(imageTake.image!, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
- }
- 
- //MARK: - Add image to Library
- func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
-    if let error = error {
-    // we got back an error!
-        let ac = UIAlertController(title: "Save error", message: error.localizedDescription, preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "OK", style: .default))
-        present(ac, animated: true)
-    } else {
-        let ac = UIAlertController(title: "Saved!", message: "Your altered image has been saved to your photos.", preferredStyle: .alert)
-        ac.addAction(UIAlertAction(title: "OK", style: .default))
-        present(ac, animated: true)
- }
- */
 
 // MARK: extention UITextFieldDelegate
 extension ContactOfPersonViewController: UITextFieldDelegate {
@@ -154,19 +171,52 @@ extension ContactOfPersonViewController {
     }
     
     @objc private func keyboardWillShow(_ notification: Notification) {
-
+        guard let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+            return
+        }        
+       // lcStackViewMargin.constant = keyboardFrame.size.height + 10
+        reloadConstraints(top: 40, margin: keyboardFrame.size.height)
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
     }
 
     @objc private func keyboardWillHide(_ notification: Notification) {
        // hideKeyboard()
     }
+    private func reloadConstraints(top: CGFloat, margin: CGFloat) {
+        lcStackViewMargin.constant = margin
+        let heightArea = self.view.frame.size.height - top - margin
+        if heightArea > (lcImageHeight.constant + lcStackViewHeight.constant + 10) {
+            lcImageTop.constant = (heightArea - lcImageHeight.constant - lcStackViewHeight.constant) / 2
+            lcStackViewToImage.constant = lcImageTop.constant
+        } else {
+            if heightArea > (lcStackViewHeight.constant + 10 ) {
+                lcImageTop.constant = 5
+                lcStackViewToImage.constant = 5
+                lcImageHeight.constant = (heightArea - lcImageTop.constant - lcStackViewHeight.constant - lcStackViewToImage.constant)
+            } else {
+                lcImageTop.constant = 5
+                lcStackViewToImage.constant = 5
+                lcStackViewHeight.constant = heightArea - 10
+            }
+        }
+    }
 }
 extension ContactOfPersonViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-    private func intitializationPfoto() {
-        self.imagePicker = UIImagePickerController()
-        self.imagePicker.delegate = self
+    private func addPfotoFromGallery() {
         self.imagePicker.sourceType = .photoLibrary
         present(imagePicker, animated: true, completion: nil)
+    }
+
+    private func addPfotoFromCamera() {
+        self.imagePicker.sourceType = .camera
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    private func initPfoto() {
+        self.imagePicker = UIImagePickerController()
+        self.imagePicker.delegate = self
     }
 
     func imagePickerController(_ picker: UIImagePickerController,
@@ -174,7 +224,7 @@ extension ContactOfPersonViewController: UIImagePickerControllerDelegate, UINavi
         if let im = info[UIImagePickerControllerOriginalImage] as? UIImage {
             ibImage.image = im
         } else {
-            print("Something went wrong")
+            debugPrint("Error: Additing pfoto don't work")
         }
         imagePicker.dismiss(animated: true, completion: nil)
     }
