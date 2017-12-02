@@ -12,6 +12,9 @@ class ContactOfPersonViewController: UIViewController {
 
     var person: Person?
     var imagePicker: UIImagePickerController!
+    var imageHeight: CGFloat = 0
+    var stackViewHeight: CGFloat = 0
+    var stackViewToImage: CGFloat = 0
 
     @IBOutlet private weak var ibLastName: UITextField!
     @IBOutlet private weak var ibFirstName: UITextField!
@@ -19,17 +22,14 @@ class ContactOfPersonViewController: UIViewController {
     @IBOutlet private weak var ibEmail: UITextField!
     @IBOutlet private weak var ibImage: UIImageView!
     @IBOutlet private weak var ibAddOrChangeButton: UIBarButtonItem!
-    @IBOutlet private var parentView: UIView!
     @IBOutlet private weak var imageView: UIView!
 
+    @IBOutlet private weak var lcStackViewMargin: NSLayoutConstraint!
+    @IBOutlet private weak var lcImageHeight: NSLayoutConstraint!
+    @IBOutlet private weak var lcStackViewHeight: NSLayoutConstraint!
     @IBOutlet private weak var lcImageTop: NSLayoutConstraint!
     @IBOutlet private weak var lcStackViewToImage: NSLayoutConstraint!
-    @IBOutlet private weak var lcImageHeight: NSLayoutConstraint!
-    
-    @IBOutlet private weak var lcStackViewHeight: NSLayoutConstraint!
-    
-    @IBOutlet private weak var lcStackViewMargin: NSLayoutConstraint!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         initPfoto()
@@ -41,12 +41,17 @@ class ContactOfPersonViewController: UIViewController {
         let tapGestureImage = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerViewAndImage(_:)))
         imageView.addGestureRecognizer(tapGestureImage)
         let tapGestureViev = UITapGestureRecognizer(target: self, action: #selector(tapRecognizerViewAndImage(_:)))
-        parentView.addGestureRecognizer(tapGestureViev)
+        self.view.addGestureRecognizer(tapGestureViev)
 
         ibImage.layer.cornerRadius = ibImage.frame.size.height / 2
         ibImage.contentMode = .scaleAspectFill
         ibImage.layer.masksToBounds = true
-        reloadConstraints(top: 60, margin: 60)
+        
+        imageHeight = lcImageHeight.constant
+        stackViewHeight = lcStackViewHeight.constant
+        stackViewToImage = lcStackViewHeight.constant
+
+        reloadConstraints(top: 10, margin: 10)
 
         if person != nil {
             ibAddOrChangeButton.title = "Изменить"
@@ -77,30 +82,31 @@ class ContactOfPersonViewController: UIViewController {
     }
 
     @IBAction func buttonAddOrChangePressed(_ sender: UIBarButtonItem) {
-        guard let firstname = ibFirstName.text,
-                let lastname = ibLastName.text else { fatalError("Error: No name or lastname")}
+        guard let firstName = ibFirstName.text, firstName.count > 1,
+            let lastName = ibLastName.text, lastName.count > 1
+            else {
+                showAlert(message: "Имя и фамилия должны содержать больше 1 символа" )
+                return
+        }
         if person != nil {
-            setPerson()
+            validatePerson()
             DataManager.instance.changePerson(person!)
         } else {
-            person = Person(firstName: firstname, lastName: lastname)
-            setPerson()
+            person = Person(firstName: firstName, lastName: lastName)
+            validatePerson()
             DataManager.instance.addPerson(person!)
         }
          navigationController?.popViewController(animated: true)
     }
-    private func setPerson() {
+
+    private func validatePerson() {
         guard let firstName: String = ibFirstName.text, firstName.count > 1 else {
-            let alert = UIAlertController(title: "Ошибка", message: "Имя должно содержать больше 1 символа", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
-            present(alert, animated: true)
+            showAlert(message: "Имя должно содержать больше 1 символа" )
             return
         }
         person?.setFirstName(name: firstName )
         guard let lastName = ibLastName.text, lastName.count > 1 else {
-            let alert = UIAlertController(title: "Ошибка", message: "Фамилия должнa содержать больше 1 символа", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
-            present(alert, animated: true)
+            showAlert(message: "Фамилия должнa содержать больше 1 символа" )
             return
         }
         person?.setLastNAme(name: lastName )
@@ -108,24 +114,35 @@ class ContactOfPersonViewController: UIViewController {
         if ibPfone.text?.isEmpty == false {
             let numStr = Int(ibPfone.text ?? "0") ?? 0
             if numStr == 0 {
-                let alert = UIAlertController(title: "Ошибка", message: "Некорректный номер телефона", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default))
-                present(alert, animated: true)
+                showAlert(message: "Некорректный номер телефона")
                 return
             } else {
                 person?.setPfoneNumber(pfoneNumber: numStr)
             }
-        }
-        if ibEmail.text?.isEmpty == false,
-            ibEmail.text?.index(of: "@") == nil {
-            let alert = UIAlertController(title: "Ошибка", message: "Некорректный eMail", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
-            present(alert, animated: true)
-            return
         } else {
-            person?.setEmail(email: ibEmail.text)
+            person?.setPfoneNumber(pfoneNumber: nil)
         }
-        person?.setPfoto(pfoto: ibImage.image) 
+        if ibEmail.text?.isEmpty == false {
+            if ibEmail.text?.index(of: "@") == nil {
+                showAlert(message: "Некорректный eMail")
+                return
+            } else {
+                person?.setEmail(email: ibEmail.text)
+            }
+        } else {
+            person?.setEmail(email: nil)
+        }
+        if ibImage.image != #imageLiteral(resourceName: "user-5") {
+            person?.setPfoto(pfoto: ibImage.image)
+        } else {
+           person?.setPfoto(pfoto: nil)
+        }
+    }
+
+    private func showAlert(message: String) {
+        let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 
     @objc private func tapRecognizerViewAndImage(_ sender: UITapGestureRecognizer) {        
@@ -138,11 +155,15 @@ class ContactOfPersonViewController: UIViewController {
             let cameraAction = UIAlertAction(title: "Камера", style: .default, handler: { [weak self] _ in
                 self?.addPfotoFromCamera()
             })
-            
+
+            let cancelAction = UIAlertAction(title: "Отменить", style: .destructive, handler: { _ in })
+
             alertVC.addAction(galleryAction)
             alertVC.addAction(cameraAction)
+            alertVC.addAction(cancelAction)
+
             self.present(alertVC, animated: true, completion: nil)
-            
+        
         } else {
             hideKeyboard()
         }
@@ -161,46 +182,70 @@ extension ContactOfPersonViewController: UITextFieldDelegate {
 extension ContactOfPersonViewController {
 
     private func addNotificationKeyboard() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)),
-                                               name: .UIKeyboardWillShow, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)),
-                                               name: .UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: .UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
     }
     @objc private func hideKeyboard() {
         view.endEditing(true)
-        reloadConstraints(top: 60, margin: 60)
+        reloadConstraints(top: 10, margin: 10)
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
     }
     
     @objc private func keyboardWillShow(_ notification: Notification) {
         guard let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }
-        reloadConstraints(top: 60, margin: keyboardFrame.size.height)
+        reloadConstraints(top: 10, margin: keyboardFrame.size.height)
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
     }
 
     @objc private func keyboardWillHide(_ notification: Notification) {
-       // hideKeyboard()
+        hideKeyboard()
     }
+    
     private func reloadConstraints(top: CGFloat, margin: CGFloat) {
-        lcStackViewMargin.constant = margin
         let heightArea = self.view.frame.size.height - top - margin
-        if heightArea > (lcImageHeight.constant + lcStackViewHeight.constant + 10) {
-            lcImageTop.constant = (heightArea - lcImageHeight.constant - lcStackViewHeight.constant) / 2
-            lcStackViewToImage.constant = lcImageTop.constant
+        
+        if heightArea > (imageHeight + stackViewHeight + stackViewToImage + 20) {
+            imageView.isHidden = false
+            lcImageHeight.constant = imageHeight
+            lcStackViewHeight.constant = stackViewHeight
+            
+            lcStackViewToImage.constant = (heightArea - lcImageHeight.constant - lcStackViewHeight.constant - lcStackViewToImage.constant) / 5
+            lcImageTop.constant = (heightArea - lcImageHeight.constant - lcStackViewHeight.constant - lcStackViewToImage.constant) / 2
+            lcStackViewMargin.constant = lcImageTop.constant
         } else {
-            if heightArea > (lcStackViewHeight.constant + 10 ) {
-                lcImageTop.constant = 5
-                lcStackViewToImage.constant = 5
-                lcImageHeight.constant = (heightArea - lcImageTop.constant - lcStackViewHeight.constant - lcStackViewToImage.constant)
+            if heightArea > (stackViewHeight + 10 ) {
+
+                imageView.isHidden = false
+                if imageHeight > (heightArea - stackViewHeight - 10) {
+                    lcImageHeight.constant = (heightArea - stackViewHeight - 10)
+                } else {
+                    lcImageHeight.constant = imageHeight
+                }
+                lcStackViewHeight.constant = stackViewHeight
+                
+                lcStackViewToImage.constant = 10
+                lcImageTop.constant = top + ((heightArea - imageHeight - lcStackViewToImage.constant - lcStackViewHeight.constant) / 2)
+                lcStackViewMargin.constant = margin + lcImageTop.constant
+                //margin
             } else {
-                lcImageTop.constant = 5
-                lcStackViewToImage.constant = 5
-                lcStackViewHeight.constant = heightArea - 10
+                lcImageHeight.constant = 0
+                imageView.isHidden = true
+                lcStackViewHeight.constant = stackViewHeight
+                lcStackViewToImage.constant = 10
+                lcImageTop.constant = (heightArea - stackViewHeight - top - margin - 10) / 2
+                lcStackViewMargin.constant = margin
+
             }
         }
+        debugPrint("-------------------------")
+        debugPrint("top=\(top), margin=\(margin), arHeight=\(heightArea), imHeight=\(lcImageHeight.constant), stackToIm=\(lcStackViewToImage.constant), stHeight=\(lcStackViewHeight.constant), top=\(lcImageTop.constant), margin =\(lcStackViewMargin.constant)")
+        debugPrint("-------------------------")
     }
 }
 extension ContactOfPersonViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
