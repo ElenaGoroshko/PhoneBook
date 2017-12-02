@@ -12,9 +12,9 @@ class ContactOfPersonViewController: UIViewController {
 
     var person: Person?
     var imagePicker: UIImagePickerController!
-//    var imageHeight: CGFloat = 0
-//    var stackViewHeight: CGFloat = 0
-//    var stackViewToImage: CGFloat = 0
+    var imageHeight: CGFloat = 0
+    var stackViewHeight: CGFloat = 0
+    var stackViewToImage: CGFloat = 0
 
     @IBOutlet private weak var ibLastName: UITextField!
     @IBOutlet private weak var ibFirstName: UITextField!
@@ -47,11 +47,11 @@ class ContactOfPersonViewController: UIViewController {
         ibImage.contentMode = .scaleAspectFill
         ibImage.layer.masksToBounds = true
         
-//        imageHeight = lcImageHeight.constant
-//        stackViewHeight = lcStackViewHeight.constant
-//        stackViewToImage = lcStackViewHeight.constant
+        imageHeight = lcImageHeight.constant
+        stackViewHeight = lcStackViewHeight.constant
+        stackViewToImage = lcStackViewHeight.constant
         
- //       reloadConstraints(top: 10, margin: 10)
+        reloadConstraints(top: 10, margin: 10)
 
         if person != nil {
             ibAddOrChangeButton.title = "Изменить"
@@ -188,7 +188,7 @@ extension ContactOfPersonViewController {
     }
     @objc private func hideKeyboard() {
         view.endEditing(true)
-     //   reloadConstraints(top: 10, margin: 10)
+        reloadConstraints(top: 10, margin: 10)
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
@@ -198,7 +198,7 @@ extension ContactOfPersonViewController {
         guard let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }
-    //    reloadConstraints(top: 10, margin: keyboardFrame.size.height)
+        reloadConstraints(top: 10, margin: keyboardFrame.size.height)
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
         }
@@ -209,27 +209,42 @@ extension ContactOfPersonViewController {
     }
     
     private func reloadConstraints(top: CGFloat, margin: CGFloat) {
-//        let heightArea = self.view.frame.size.height - top - margin
-//        
-//        if heightArea > (imageHeight + stackViewHeight + stackViewToImage + 20) {
-//            lcImageHeight.constant = imageHeight
-//            lcStackViewHeight.constant = stackViewHeight
-//            
-//            lcStackViewToImage.constant = (heightArea - lcImageHeight.constant - lcStackViewHeight.constant - lcStackViewToImage.constant) / 5
-//            lcImageTop.constant = (heightArea - lcImageHeight.constant - lcStackViewHeight.constant - lcStackViewToImage.constant) / 2
-//            lcStackViewMargin.constant = lcImageTop.constant
-//        } else {
-//            if heightArea > (lcStackViewHeight.constant + 10 ) {
-//                lcImageTop.constant = 5
-//                lcStackViewToImage.constant = 5
-//                lcImageHeight.constant = (heightArea - lcImageTop.constant - lcStackViewHeight.constant - lcStackViewToImage.constant)
-//            } else {
-//                lcImageTop.constant = 5
-//                lcStackViewToImage.constant = 5
-//                lcStackViewHeight.constant = heightArea - 10
-//            }
-//        }
-//
+        let heightArea = self.view.frame.size.height - top - margin
+        
+        if heightArea > (imageHeight + stackViewHeight + stackViewToImage + 20) {
+            imageView.isHidden = false
+            lcImageHeight.constant = imageHeight
+            lcStackViewHeight.constant = stackViewHeight
+            
+            lcStackViewToImage.constant = (heightArea - lcImageHeight.constant - lcStackViewHeight.constant - lcStackViewToImage.constant) / 5
+            lcImageTop.constant = (heightArea - lcImageHeight.constant - lcStackViewHeight.constant - lcStackViewToImage.constant) / 2
+            lcStackViewMargin.constant = lcImageTop.constant
+        } else {
+            if heightArea > (stackViewHeight + 10 ) {
+
+                imageView.isHidden = false
+                if imageHeight > (heightArea - stackViewHeight - 10) {
+                    lcImageHeight.constant = (heightArea - stackViewHeight - 10)
+                } else {
+                    lcImageHeight.constant = imageHeight
+                }
+                lcStackViewHeight.constant = stackViewHeight
+                
+                lcStackViewToImage.constant = 10
+                lcImageTop.constant = top + ((heightArea - imageHeight - lcStackViewToImage.constant - lcStackViewHeight.constant) / 2)
+                lcStackViewMargin.constant = margin + lcImageTop.constant
+                //margin
+            } else {
+                lcImageHeight.constant = 0
+                imageView.isHidden = true
+                lcStackViewHeight.constant = stackViewHeight
+                lcStackViewToImage.constant = 10
+                lcImageTop.constant = (heightArea - stackViewHeight - top - margin - 10) / 2
+                lcStackViewMargin.constant = margin
+
+            }
+        }
+        debugPrint("top=\(top), margin=\(margin), arHeight=\(heightArea), imHeight=\(lcImageHeight.constant), stackToIm=\(lcStackViewToImage.constant), stHeight=\(lcStackViewHeight.constant), top=\(lcImageTop.constant), margin =\(lcStackViewMargin.constant)")
     }
 }
 extension ContactOfPersonViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
