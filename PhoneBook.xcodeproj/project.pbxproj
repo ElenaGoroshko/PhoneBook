@@ -20,6 +20,7 @@
 		F3A05FAD1FB89F0F00FCBE7B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F3A05FAB1FB89F0F00FCBE7B /* LaunchScreen.storyboard */; };
 		F3A05FB81FB89F0F00FCBE7B /* PhoneBookTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A05FB71FB89F0F00FCBE7B /* PhoneBookTests.swift */; };
 		F3A05FC31FB89F0F00FCBE7B /* PhoneBookUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3A05FC21FB89F0F00FCBE7B /* PhoneBookUITests.swift */; };
+		F3D126041FC2F30B00E5633B /* Notification+Extential.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3D126031FC2F30B00E5633B /* Notification+Extential.swift */; };
 		F3E7323F1FBF28E8008BE129 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3E7323E1FBF28E8008BE129 /* DataManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -66,6 +67,7 @@
 		F3A05FBE1FB89F0F00FCBE7B /* PhoneBookUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PhoneBookUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F3A05FC21FB89F0F00FCBE7B /* PhoneBookUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneBookUITests.swift; sourceTree = "<group>"; };
 		F3A05FC41FB89F0F00FCBE7B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		F3D126031FC2F30B00E5633B /* Notification+Extential.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Extential.swift"; sourceTree = "<group>"; };
 		F3E7323E1FBF28E8008BE129 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -156,6 +158,7 @@
 		F3A05FA11FB89F0E00FCBE7B /* PhoneBook */ = {
 			isa = PBXGroup;
 			children = (
+				F3D126021FC2F2B000E5633B /* Extention */,
 				F3E8FAB81FBCCB8D00A98903 /* Modal */,
 				F3E8FAB91FBCCBBF00A98903 /* Views */,
 				F3E8FABA1FBCCBC900A98903 /* Controllers */,
@@ -180,6 +183,14 @@
 				F3A05FC41FB89F0F00FCBE7B /* Info.plist */,
 			);
 			path = PhoneBookUITests;
+			sourceTree = "<group>";
+		};
+		F3D126021FC2F2B000E5633B /* Extention */ = {
+			isa = PBXGroup;
+			children = (
+				F3D126031FC2F30B00E5633B /* Notification+Extential.swift */,
+			);
+			path = Extention;
 			sourceTree = "<group>";
 		};
 		F3E8FAB81FBCCB8D00A98903 /* Modal */ = {
@@ -517,6 +528,7 @@
 				F3E7323F1FBF28E8008BE129 /* DataManager.swift in Sources */,
 				F348F4881FBF242700336EF7 /* Person.swift in Sources */,
 				F383034A1FC09EA0005CEF52 /* ContactOfPersonViewController.swift in Sources */,
+				F3D126041FC2F30B00E5633B /* Notification+Extential.swift in Sources */,
 				F34F7FC21FBF41EA00C71F96 /* PersonTableViewCell.swift in Sources */,
 				F31A76E11FBF6F170062E276 /* ContactsViewController.swift in Sources */,
 			);
@@ -686,7 +698,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = YS2A4276K3;
 				INFOPLIST_FILE = PhoneBook/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Elena-Goroshko.PhoneBook";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -701,7 +715,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = YS2A4276K3;
 				INFOPLIST_FILE = PhoneBook/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "Elena-Goroshko.PhoneBook";
 				PRODUCT_NAME = "$(TARGET_NAME)";

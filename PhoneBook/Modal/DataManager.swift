@@ -12,32 +12,136 @@ final class DataManager {
     static let instance = DataManager()
     private init() {
         generatePerson()
-        curentChar = "А"
     }
 
-    private(set) var personsOfChar: [Person] = []
     private(set) var charOfAlphabet: [Character] = []
-    private(set) var persons: [Character: [Person]] = [:]
-
-    private(set) var curentChar: Character?
+    private var persons: [Character: [Person]] = [:]
 
     // MAPK: private methods
     private func generatePerson() {
         self.charOfAlphabet = ["А", "Д", "Ж", "Я"]
-        let person1 = Person(firstName: "Анна", lastName: "Иванова", pfoneNumber: 12345678)
-        let person2 = Person(firstName: "Антон", lastName: "Петров", pfoneNumber: 12345678)
-        let person3 = Person(firstName: "Андрей", lastName: "Сетченко", pfoneNumber: 12345678)
+        let person1 = Person(firstName: "Анна", lastName: "Иванова")
+        let person2 = Person(firstName: "Антон", lastName: "Петров")
+        let person3 = Person(firstName: "Андрей", lastName: "Сетченко")
         self.persons["А"] = [person1, person2, person3]
 
-        let person4 = Person(firstName: "Диана", lastName: "Васильева", pfoneNumber: 12345678)
-        let person5 = Person(firstName: "Дмитрий", lastName: "Вацлав", pfoneNumber: 12345678)
+        let person4 = Person(firstName: "Диана", lastName: "Васильева")
+        let person5 = Person(firstName: "Дмитрий", lastName: "Вацлав")
         self.persons["Д"] = [person4, person5]
 
-        let person6 = Person(firstName: "Жанна", lastName: "Умничева", pfoneNumber: 12345678)
+        let person6 = Person(firstName: "Жанна", lastName: "Умничева")
         self.persons["Ж"] = [person6]
 
-        let person7 = Person(firstName: "Яна", lastName: "Наченко", pfoneNumber: 12345678)
-        let person8 = Person(firstName: "Ярослав", lastName: "Томенко", pfoneNumber: 12345678)
+        let person7 = Person(firstName: "Яна", lastName: "Наченко")
+        let person8 = Person(firstName: "Ярослав", lastName: "Томенко")
         self.persons["Я"] = [person7, person8]
+    }
+
+    private func findCharElseAddIt(_ char: Character) -> Bool {
+        // return true when char found
+        var index = -1
+        for (i, ch) in charOfAlphabet.enumerated() {
+            if ch == char {
+                return true
+            } else {
+                if ch < char { index = i }
+            }
+        }
+        charOfAlphabet.insert(char, at: index + 1)
+        return false
+    }
+
+    // MARK: publik methods
+    func contacts(of character: Character) -> [Person] {
+        return persons[character] ?? []
+    }
+
+    func findPerson(_ person: Person) -> (Character?, Int?) { //return char and index if person exist
+        for ch in charOfAlphabet {
+            guard let persons = self.persons[ch] else { return(nil, nil)}
+            for (i, p) in persons.enumerated() where p == person {
+                return (ch, i)
+            }
+        }
+      return(nil, nil)
+    }
+
+    func changePerson(_ person: Person) {
+
+        var charOptional: Character?
+        var indexOptional: Int?
+        (charOptional, indexOptional) = findPerson(person)
+        let char = person.firstName[person.firstName.startIndex]
+        guard let index = indexOptional else {
+            debugPrint("Error: The person isn't contained in a DataManager")
+            return
+        }
+
+        if char == charOptional { //the person is contained in a self.persons[char]
+            guard var persons = self.persons[char] else {
+                debugPrint("Error: The person isn't contained in a DataManager")
+                return
+            }
+            persons[index].setFirstName(name: person.firstName)
+            persons[index].setLastNAme(name: person.lastName)
+            persons[index].setPfoneNumber(pfoneNumber: person.pfoneNumber)
+            persons[index].setEmail(email: person.email)
+            persons[index].setPfoto(pfoto: person.pfoto)
+            self.persons[char] = persons
+            NotificationCenter.default.post(name: .ContactDetailsChanged, object: nil)
+        } else {  //the person is contained in a self.persons[charOptional]
+            deletePerson(person)
+            addPerson(person)
+        }
+        debugPrint(index)
+    }
+
+    func addPerson(_ person: Person) {
+        let char = person.firstName[person.firstName.startIndex]
+
+        if findCharElseAddIt(char) { //charOfAlphabet has this char
+            var personsOfChar = self.contacts(of: char)
+            personsOfChar.append(person)
+            personsOfChar.sort(by: { $0.firstName < $1.firstName })
+            self.persons[char] = personsOfChar
+        } else { //charOfAlphabet hasn't this char
+            self.persons[char] = [person]
+        }
+        NotificationCenter.default.post(name: .ContactAdded, object: nil)
+    }
+
+    func deleteSection(_ char: Character) {
+        for (i, ch) in self.charOfAlphabet.enumerated() where ch == char {
+           self.charOfAlphabet.remove(at: i)
+        }
+    }
+
+    func deletePerson(_ person: Person) {
+        let (ch, i) = findPerson(person)
+        guard let char = ch else {
+            debugPrint("Error: The person isn't contained in a DataManager")
+            return
+        }
+        guard let index = i else {
+            debugPrint("Error: The person isn't contained in a DataManager")
+            return
+        }
+        var persons = self.contacts(of: char)
+        persons.remove(at: index)
+        self.persons[char] = persons
+        if persons.isEmpty { deleteSection(char) }
+        NotificationCenter.default.post(name: .ContactDeleted, object: nil)
+    }
+
+    func serchPerson( byName name: String) -> [Person] {
+        var filteredPerson: [Person] = []
+        for char in self.charOfAlphabet {
+            let persons = self.persons[char] ?? []
+            for person in persons where person.firstName.lowercased().contains(name.lowercased()) ||
+                                        person.lastName.lowercased().contains(name.lowercased()) {
+                filteredPerson.append(person)
+            }
+        }
+        return filteredPerson
     }
 }
