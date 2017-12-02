@@ -244,7 +244,9 @@ extension ContactOfPersonViewController {
 
             }
         }
+        debugPrint("-------------------------")
         debugPrint("top=\(top), margin=\(margin), arHeight=\(heightArea), imHeight=\(lcImageHeight.constant), stackToIm=\(lcStackViewToImage.constant), stHeight=\(lcStackViewHeight.constant), top=\(lcImageTop.constant), margin =\(lcStackViewMargin.constant)")
+        debugPrint("-------------------------")
     }
 }
 extension ContactOfPersonViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
