@@ -50,7 +50,7 @@ class ContactOfPersonViewController: UIViewController {
         imageHeight = lcImageHeight.constant
         stackViewHeight = lcStackViewHeight.constant
         stackViewToImage = lcStackViewHeight.constant
-        
+
         reloadConstraints(top: 10, margin: 10)
 
         if person != nil {
@@ -182,8 +182,7 @@ extension ContactOfPersonViewController: UITextFieldDelegate {
 extension ContactOfPersonViewController {
 
     private func addNotificationKeyboard() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)),
-                                               name: .UIKeyboardWillHide, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: .UIKeyboardWillHide, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: .UIKeyboardWillShow, object: nil)
     }
     @objc private func hideKeyboard() {
