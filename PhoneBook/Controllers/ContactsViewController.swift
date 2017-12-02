@@ -63,7 +63,6 @@ class ContactsViewController: UIViewController {
     private func filterContent(byName name: String) {
         isSerchActive = !name.isEmpty
         filteredContacts = DataManager.instance.serchPerson(byName: name)
-        debugPrint(isSerchActive)
         tabelView.reloadData()
     }
    
@@ -83,7 +82,10 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "PersonCell") as? PersonTableViewCell
-            else { fatalError("Error: Cell does't exist") }
+            else {
+                debugPrint("Error: Cell does't exist")
+                return UITableViewCell()
+        }
         let person = isSerchActive ? filteredContacts[indexPath.row] : getPerson(indexPath: indexPath)
         cell.update(firstName: person.firstName, lastName: person.lastName)
         return cell
@@ -107,10 +109,16 @@ extension ContactsViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { fatalError("Error: Delete don't work")  }
-        let person = getPerson(indexPath: indexPath)
-        DataManager.instance.deletePerson(person)
+        if isSerchActive {
+            let person = filteredContacts[indexPath.row]
+            DataManager.instance.deletePerson(person)
+            let str = ibSearchBar.text ?? ""
+            filterContent(byName: str)
+        } else {
+            let person = getPerson(indexPath: indexPath)
+            DataManager.instance.deletePerson(person)
+        }
     }
-
 }
 // MARK: UISearchBarDelegate
 extension ContactsViewController: UISearchBarDelegate {
@@ -138,18 +146,13 @@ extension ContactsViewController {
     }
     
     private func  addObserversKeyboard() {
-        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)),
-                                               name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)),
                                                name: .UIKeyboardWillHide, object: nil)
     }
     private func  removeObserversKeyboard() {
-        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
     }
-    @objc private func keyboardWillShow(_ notification: Notification) {
-        
-    }
+
     @objc private func keyboardWillHide(_ notification: Notification) {
         hideKeyboard()
     }
